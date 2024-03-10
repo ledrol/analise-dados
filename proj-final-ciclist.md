@@ -1,6 +1,3 @@
-
-
-
 Este é um estudo de caso para a conclusão do curso de análise de dados do Google realizado através do Coursera.
 
 #### Introdução
@@ -17,7 +14,6 @@ Para isso, a equipe precisa entender melhor como os ciclistas membros e os cicli
 
 Como os ciclistas membros e os ciclistas casuais usam as bicicletas da Cyclistic de forma diferente?
 
-
 #### Fontes de dados usadas
 
 Para os propósitos deste estudo de caso, os conjuntos de dados utilizados são dados públicos que foram disponibilizados pela Motivate International Inc. através do seguinte endereço: https://divvy-tripdata.s3.amazonaws.com/index.html e sob a seguinte licença de uso https://www.divvybikes.com/data-license-agreement.
@@ -26,6 +22,7 @@ Os dados mais recentes (a partir do ano 2020) estão organizados no formato yyyy
 Os arquivos utilizados foram os dos meses janeiro até dezembro de 2023.
 
 #### Ferramenta utilizada
+
 Foi escolhido para a análise desses dados a utilização de R. Isso foi devido ao grande tamanho da fonte de dados, impossibilitando a análise em ferramentas como planilhas, por exemplo. Outra possibilidade seria a análise com alguma ferramenta de banco de dados como o SQLite e a visualização gráfica com Tableau.
 
 #### Análise descritiva
@@ -126,21 +123,21 @@ all_trips <- all_trips %>%
 Para inspecionar o data frame com a nova tabela criada podemos usar vários comandos:
 
 ```
-colnames(all_trips)		#Mostra os nomes das colunas
-nrow(all_trips)			#Conta o número de linhas
-dim(all_trips)			#Mostra as dimensões de uma matriz ou vetor
-head(all_trips)			#Mostra o início
-tail(all_trips)			#Mostra o fim
-str(all_trips)			#Mostra a estrutura interna
-summary(all_trips)		#Mostra as estatísticas resumidas
+colnames(all_trips)        #Mostra os nomes das colunas
+nrow(all_trips)            #Conta o número de linhas
+dim(all_trips)            #Mostra as dimensões de uma matriz ou vetor
+head(all_trips)            #Mostra o início
+tail(all_trips)            #Mostra o fim
+str(all_trips)            #Mostra a estrutura interna
+summary(all_trips)        #Mostra as estatísticas resumidas
 ```
 
 Precisamos adicionar agora as colunas que listam a data, o mês e o dia de cada passeio:
 
 ```
-all_trips$date <- as.Date(all_trips$started_at)		# O formato padrão é yyyy-mm-dd
+all_trips$date <- as.Date(all_trips$started_at)        # O formato padrão é yyyy-mm-dd
 all_trips$month <- month(all_trips$started_at, label = TRUE, abbr = TRUE)
-all_trips$day <- format(as.Date(all_trips$date), "%d")		# Dia do mês
+all_trips$day <- format(as.Date(all_trips$date), "%d")        # Dia do mês
 all_trips$day_of_week <- format(as.Date(all_trips$date), "%A")
 all_trips$hour_of_day <- strftime(all_trips$started_at, "%H")
 ```
@@ -164,14 +161,13 @@ Removendo dados "ruins" com valores negativos
 all_trips_v2 <- all_trips[!(all_trips$ride_length<0),]
 ```
 
-
 Análise descritiva na duração do passeio [tudo em segundos]
 
 ```
-mean(all_trips_v2$ride_length) 		#Média direta (duração do passeio total / passeios)
-median(all_trips_v2$ride_length) 	#Número de ponto médio no conjunto ascendente de duração do passeio
-max(all_trips_v2$ride_length) 		#Passeio mais longo
-min(all_trips_v2$ride_length) 		#Passeio mais curto
+mean(all_trips_v2$ride_length)         #Média direta (duração do passeio total / passeios)
+median(all_trips_v2$ride_length)     #Número de ponto médio no conjunto ascendente de duração do passeio
+max(all_trips_v2$ride_length)         #Passeio mais longo
+min(all_trips_v2$ride_length)         #Passeio mais curto
 ```
 
 Comparando usuários membros e usuários casuais:
@@ -193,11 +189,11 @@ Analisando dados dos ciclistas por tipo e dia da semana:
 
 ```
 all_trips_v2 %>% 
-  mutate(weekday = wday(started_at, label = TRUE)) %>%  		# Cria um campo dia da semana usando wday()
-  group_by(member_casual, weekday) %>%  						# Agrupa por tipo de usuário e dia da semana
+  mutate(weekday = wday(started_at, label = TRUE)) %>%          # Cria um campo dia da semana usando wday()
+  group_by(member_casual, weekday) %>%                          # Agrupa por tipo de usuário e dia da semana
   summarise(number_of_rides = n()                               # Calcula o número de passeios e  
-  ,average_duration = mean(ride_length)) %>%                 	# Calcula a duração média
-  arrange(member_casual, weekday)								# Classifica
+  ,average_duration = mean(ride_length)) %>%                     # Calcula a duração média
+  arrange(member_casual, weekday)                                # Classifica
 ```
 
 Criando um gráfico da quantidade de passeios por tipo de ciclista na semana:
@@ -214,7 +210,7 @@ all_trips_v2 %>%
   labs(title="Quantidade de passeios por tipo de ciclista",x="Dia da Semana",y="Número de Passeios", fill= "Membro ou Casual")
 ```
 
-![alternate text](./Rplot1.jpg "Title")
+![alternate text](/img/Rplot1.jpg "Title")
 
 No gráfico acima, podemos perceber que os usuários membros realizam mais passeios que os usuários casuais em qualquer dia da semana. Os usuários membros realizam mais passeios durante os dias úteis da semana e um pouco menos durante o fim de semana. Já para os usuários casuais ocorre o oposto, os usuários casuais realizam mais passeios durante o fim de semana.
 
@@ -232,7 +228,7 @@ all_trips_v2 %>%
   labs(title="Duração média dos passeios por tipo de ciclista",x="Dia da Semana",y="Duração Média", fill= "Membro ou Casual")
 ```
 
-![alternate text](./Rplot2.jpg "Title")
+![alternate text](/img/Rplot2.jpg "Title")
 
 No gráfico acima, podemos observar que a duração média dos passeios para os usuários membros se manteve praticamente constante durante a semana, com um aumento mínimo nos finais de semana. Para os usuários casuais a duração média dos passeios na semana é bem superior aos usuários membros, bem como um aumento mais expressivo nos finais de semana.
 
@@ -250,7 +246,7 @@ all_trips_v2 %>%
   labs(title="Quantidade de passeios por mês para cada tipo de ciclista",x="Mês",y="Duração Média", fill= "Membro ou Casual")
 ```
 
-![alternate text](./Rplot3.jpg "Title")
+![alternate text](/img/Rplot3.jpg "Title")
 
 No gráfico acima, observamos que a quantidade de passeios para os ciclistas membros foram maiores do que para os ciclistas casuais em todos os meses. Também se observa uma quantidade maior de passeios para ambos durante os meses de abril a novembro e uma quantidade menor nos meses de dezembro a março, que correspondem ao inverno no hemisfério norte.
 
@@ -268,13 +264,11 @@ all_trips_v2 %>%
   labs(title="Quantidade de passeios por hora do dia para cada tipo de ciclista",x="Hora do dia",y="Duração Média", fill= "Membro ou Casual")
 ```
 
-![alternate text](./Rplot4.jpg "Title")
+![alternate text](/img/Rplot4.jpg "Title")
 
 No gráfico acima, podemos observar que há uma quantidade de passeios maior entre aproximadamente as 4 horas da manhã e as 20 horas da noite para ambos os tipos de ciclistas. Também se observa que há uma quantidade um pouco maior de passeios para os ciclistas membros.
 
-
-#### Conclusão Prévia 
-
+#### Conclusão Prévia
 
 Podemos perceber ao visualizar os gráficos que os ciclistas membros e ciclistas casuais se comportam de maneira diferente, pois:
 
